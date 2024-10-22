@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MFC Auction Calculator</title>
+</head>
+<body>
+    <h1>MFC Auction Calculator</h1>
+    <!-- Section 1: Auction Total Price Calculation -->
+    <form id="auctionCalculator">
+        <label for="bidAmount">Bid Amount:</label>
+        <input type="number" id="bidAmount" name="bidAmount" required>
+        <button type="submit">Calculate Total Price</button>
+    </form>
+    <p>Total Price: <span id="totalPrice"></span></p>
+
+    <!-- Section 2: AutoTrader Vehicle Search -->
+    <h2>Search for Similar Vehicles on AutoTrader</h2>
+    <form id="vehicleSearchForm">
+        <label for="vehicleDetails">Vehicle Details:</label>
+        <input type="text" id="vehicleDetails" name="vehicleDetails" placeholder="e.g., 2012 Nissan NP200" required>
+        <button type="submit">Search AutoTrader</button>
+    </form>
+    <div id="vehicleResults"></div>
+
+    <script>
+        document.getElementById("auctionCalculator").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const bidAmount = parseFloat(document.getElementById("bidAmount").value);
+            const commission = bidAmount * 0.05;
+            const dekraFee = 521.74;
+            const adminFee = 2250;
+            const subtotal = bidAmount + commission + dekraFee + adminFee;
+            const vat = subtotal * 0.15;
+            const totalPrice = subtotal + vat;
+            document.getElementById("totalPrice").innerText = totalPrice.toFixed(2);
+        });
+
+        document.getElementById("vehicleSearchForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const vehicleDetails = document.getElementById("vehicleDetails").value;
+            const response = await fetch(`/api/search-autotrader?query=${vehicleDetails}`);
+            const vehicles = await response.json();
+            const resultsContainer = document.getElementById("vehicleResults");
+            resultsContainer.innerHTML = vehicles.map(vehicle => `
+                <div>
+                    <h3>${vehicle.title}</h3>
+                    <p>Price: ${vehicle.price}</p>
+                    <a href="${vehicle.link}" target="_blank">View Listing</a>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>
