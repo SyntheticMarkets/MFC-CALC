@@ -53,5 +53,38 @@
             `).join('');
         });
     </script>
+
+<script>
+document.getElementById("auctionCalculator").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const bidAmount = parseFloat(document.getElementById("bidAmount").value);
+    const commission = bidAmount * 0.05;
+    const dekraFee = 521.74;
+    const adminFee = 2250;
+    const subtotal = bidAmount + commission + dekraFee + adminFee;
+    const vat = subtotal * 0.15;
+    const totalPrice = subtotal + vat;
+    const deposit = 5000;
+    const totalPriceWithDeposit = totalPrice - deposit;
+
+    // Display breakdown
+    document.getElementById("breakdown").innerHTML = `
+        <p><strong>Bid Amount:</strong> R${bidAmount.toFixed(2)}</p>
+        <p><strong>Commission (5%):</strong> R${commission.toFixed(2)}</p>
+        <p><strong>Dekra Fee:</strong> R${dekraFee.toFixed(2)}</p>
+        <p><strong>Admin Fee:</strong> R${adminFee.toFixed(2)}</p>
+        <p><strong>Subtotal (before VAT):</strong> R${subtotal.toFixed(2)}</p>
+        <p><strong>VAT (15%):</strong> R${vat.toFixed(2)}</p>
+    `;
+
+    // Display total price and total price with and without deposit
+    document.getElementById("totalPrice").innerHTML = `
+        Total Price (without deposit): R${totalPrice.toFixed(2)}<br>
+        Total Price (with R5000 deposit): R${totalPriceWithDeposit.toFixed(2)}
+    `;
+});
+</script>
+
 </body>
 </html>
